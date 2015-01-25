@@ -79,14 +79,21 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     @Override
     public void paintComponent(Graphics g) {
         // Bakgrund
-		if (superMode)
+		if (superMode){
 			if (moveAlienOrNot % 2 == 0)
 			g.setColor(new Color(155, 200, 0));
 			else
 				g.setColor(new Color(155, 50, 255));
+		}
 		else
 			g.setColor(new Color(0, 0, 0));
+		
         g.fillRect(0, 0, windowX, windowY);
+		
+		if (superMode) {
+			g.setColor(new Color(255, 29, 100, 125));
+			g.fillRect(shipX + shipSizeX / 2 - 2, 0, 4, 500);
+		}
 		
 		// Skott
 		g.setColor(new Color(255, 255, 255));
@@ -105,6 +112,8 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
 		// Ritar rymdskepp
         g.setColor(new Color(255, 2, 57));
         g.fillRect(shipX, windowY - 100, shipSizeX, shipSizeY);
+		g.fillRect(shipX + shipSizeX / 2 - 2, windowY - 108, 4, 8);
+		
     }
     public void actionPerformed(ActionEvent e) {
         //AlienGame theClass=new AlienGame();
@@ -146,7 +155,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
 		
 		if (spaceDown) {
 			if (shootOrNot == fireSpeed) { // Ändra hur fort den ska skjuta här
-				bullets[nextBullet].x = shipX;
+				bullets[nextBullet].x = shipX + shipSizeX / 2 - bullets[nextBullet].sizeX;
 				bullets[nextBullet].y = windowY - 100;
 				bullets[nextBullet].alive = true;
 				if (nextBullet + 1 < maxBullets)
