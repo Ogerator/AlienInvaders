@@ -26,6 +26,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     int shipSpeed = 2; //2 pixlar per 10 ms
     boolean debugMode = false;
 	int nextBullet;
+	int bulletSpeed = 3;
 	int shootOrNot;
 	int moveAlienOrNot;
 	boolean spaceDown;
@@ -92,7 +93,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
 		
 		if (superMode) {
 			g.setColor(new Color(255, 29, 100, 125));
-			g.fillRect(shipX + shipSizeX / 2 - 2, 0, 4, 500);
+			g.fillRect(shipX + shipSizeX / 2 - 1, 0, 1, 500);
 		}
 		
 		// Skott
@@ -138,7 +139,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
         }
 		// Skottet rör sig
 		for (int i = 0; i < maxBullets; i++) {
-			bullets[i].y = bullets[i].y - 3;
+			bullets[i].y = bullets[i].y - bulletSpeed;
 			if (bullets[i].y < 0)
 				bullets[i].alive = false;
 		}
@@ -183,11 +184,16 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
 				}
 			}
 		
-		if (spaceDown && upDown) {
+		if (upDown && spaceDown) {
+			superMode = true;
 			fireSpeed = 1;
 			shipSpeed = 6;
-			superMode = true;
+			bulletSpeed = 3;
+			shootOrNot = 0;
 		}
+		//for (int i = 0; i < maxAliens; i++)
+			//System.out.println(bullets[i].alive);
+		
 		repaint();
     }
 	
