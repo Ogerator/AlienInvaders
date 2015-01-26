@@ -27,8 +27,19 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     int shipSpeed = 2; //2 pixlar per 10 ms
     boolean debugMode = false;
 	int nextBullet;
+<<<<<<< HEAD
 	Image image;
 	int[] wallHP=new int[]{1,1,1,1};
+=======
+	int bulletSpeed = 3;
+	int shootOrNot;
+	int moveAlienOrNot;
+	boolean spaceDown;
+	boolean upDown;
+	int points;
+	int fireSpeed = 25;
+	boolean superMode = false;
+>>>>>>> 56e735d5aa0b0591e6b4a49bfe54e7834c3eccdc
 	
 	public AlienGame() {
 		for (int i = 0; i < 10; i++) {
@@ -74,6 +85,14 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
 		g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, windowX, windowY);
 		
+<<<<<<< HEAD
+=======
+		if (superMode) {
+			g.setColor(new Color(255, 29, 100, 125));
+			g.fillRect(shipX + shipSizeX / 2 - 1, 0, 1, 500);
+		}
+		
+>>>>>>> 56e735d5aa0b0591e6b4a49bfe54e7834c3eccdc
 		// Skott
 		for (int i = 0; i < 10;  i++) {
 			g.setColor(new Color(255, 255, 255));
@@ -126,12 +145,72 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
             }
         }
 		// Skottet rör sig
+<<<<<<< HEAD
 		for (int i = 0; i < 10; i++) {
 			if (bullets[i].y > 0) {
 				bullets[i].y = bullets[i].y - 3;
 			}
 		}
         repaint();
+=======
+		for (int i = 0; i < maxBullets; i++) {
+			bullets[i].y = bullets[i].y - bulletSpeed;
+			if (bullets[i].y < 0)
+				bullets[i].alive = false;
+		}
+
+		
+		// Aliens rör sig
+		if (moveAlienOrNot > 1000)
+			moveAlienOrNot = 0;
+		
+		for (int i = 0; i < maxAliens && moveAlienOrNot % 15 ==  0; i++) {
+			aliens[i].y = aliens[i].y + 1;
+		}
+		moveAlienOrNot += 1;
+		
+		if (spaceDown) {
+			if (shootOrNot == fireSpeed) { // Ändra hur fort den ska skjuta här
+				bullets[nextBullet].x = shipX + shipSizeX / 2 - bullets[nextBullet].sizeX;
+				bullets[nextBullet].y = windowY - 100;
+				bullets[nextBullet].alive = true;
+				if (nextBullet + 1 < maxBullets)
+					nextBullet++;
+				else
+					nextBullet = 0;
+				shootOrNot = 0;
+			}
+			
+		}
+		if (shootOrNot < fireSpeed) { // och här
+			shootOrNot++;
+		}
+		for (int i = 0; i < maxBullets; i++)
+			for (int j = 0; j < maxAliens; j++) {
+				if (bullets[i].x + bullets[i].sizeX >= aliens[j].x &&
+									bullets[i].x <= aliens[j].x + aliens[j].sizeX &&
+									bullets[i].y + bullets[i].sizeY >= aliens[j].y &&
+									bullets[i].y <= aliens[j].y + aliens[j].sizeY &&
+									aliens[j].alive && bullets[i].alive) {
+					aliens[j].alive = false;
+					bullets[i].alive = false;
+					points += 10;
+					System.out.println("Points: " + points);
+				}
+			}
+		
+		if (upDown && spaceDown) {
+			superMode = true;
+			fireSpeed = 1;
+			shipSpeed = 6;
+			bulletSpeed = 3;
+			shootOrNot = 0;
+		}
+		//for (int i = 0; i < maxAliens; i++)
+			//System.out.println(bullets[i].alive);
+		
+		repaint();
+>>>>>>> 56e735d5aa0b0591e6b4a49bfe54e7834c3eccdc
     }
 
     @Override
