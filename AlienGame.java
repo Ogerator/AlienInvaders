@@ -1,6 +1,10 @@
 /**
  * Created by Oskar on 2015-01-22.
- */
+  TODO:
+  fixa aliens
+  fixa så att väggarna kan förlora HP
+  nörfa väggarna?
+  */
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +15,7 @@ import java.awt.event.KeyListener;
 
 public class AlienGame extends JComponent implements ActionListener, KeyListener {
 
-	int maxAliens = 8;
-	Alien[] aliens = new Alien[maxAliens];
-	int maxBullets = 200;
-    Bullet[] bullets = new Bullet[maxBullets];
+    Bullet[] bullets = new Bullet[10];
     // Bullet theBullet = new Bullet();
     int windowX = 800;
     public int windowY = 600;
@@ -26,21 +27,12 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     int shipSpeed = 2; //2 pixlar per 10 ms
     boolean debugMode = false;
 	int nextBullet;
-	int shootOrNot;
-	int moveAlienOrNot;
-	boolean spaceDown;
-	boolean upDown;
-	int points;
-	int fireSpeed = 25;
-	boolean superMode = false;
+	Image image;
+	int[] wallHP=new int[]{1,1,1,1};
 	
-	public AlienGame() { //initera gojs här typ
-		for (int i = 0; i < maxBullets; i++) {
+	public AlienGame() {
+		for (int i = 0; i < 10; i++) {
 			bullets[i] = new Bullet();
-		}
-		for (int i = 0; i < maxAliens; i++) {
-			aliens[i] = new Alien();
-			aliens[i].x = i * 100;
 		}
 	}
     public static void main (String[] arg) {
@@ -79,41 +71,38 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     @Override
     public void paintComponent(Graphics g) {
         // Bakgrund
-		if (superMode){
-			if (moveAlienOrNot % 2 == 0)
-			g.setColor(new Color(155, 200, 0));
-			else
-				g.setColor(new Color(155, 50, 255));
-		}
-		else
-			g.setColor(new Color(0, 0, 0));
-		
+		g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, windowX, windowY);
 		
-		if (superMode) {
-			g.setColor(new Color(255, 29, 100, 125));
-			g.fillRect(shipX + shipSizeX / 2 - 2, 0, 4, 500);
-		}
-		
 		// Skott
-		g.setColor(new Color(255, 255, 255));
-		for (int i = 0; i < maxBullets;  i++) {
-			if (bullets[i].alive)
-				g.fillRect(bullets[i].x, bullets[i].y, bullets[i].sizeX, bullets[i].sizeY);
-		}
-		
-		// Aliens
-		g.setColor(new Color(55, 111, 60));
-		for (int i = 0; i < maxAliens; i++) {
-			if (aliens[i].alive)
-				g.fillRect(aliens[i].x, aliens[i].y, aliens[i].sizeX, aliens[i].sizeY);
+		for (int i = 0; i < 10;  i++) {
+			g.setColor(new Color(255, 255, 255));
+			//if (bullets[i].x != null && bullets[i].y != null)
+				g.fillRect(bullets[i].x, bullets[i].y, 2, 10);
 		}
 		
 		// Ritar rymdskepp
         g.setColor(new Color(255, 2, 57));
         g.fillRect(shipX, windowY - 100, shipSizeX, shipSizeY);
-		g.fillRect(shipX + shipSizeX / 2 - 2, windowY - 108, 4, 8);
 		
+		//ritar skydd
+		ImageIcon wall1=new ImageIcon("recource\\wall"+wallHP[0]+".png");
+		ImageIcon wall2=new ImageIcon("recource\\wall"+wallHP[1]+".png");
+		ImageIcon wall3=new ImageIcon("recource\\wall"+wallHP[2]+".png");
+		ImageIcon wall4=new ImageIcon("recource\\wall"+wallHP[3]+".png");
+		if(wallHP[0]<5){
+		g.drawImage(wall1.getImage(), (100-54)+0*200, windowY - 200, null);
+		}
+		if(wallHP[1]<5){
+		System.out.println("wall 2 printed");
+		g.drawImage(wall2.getImage(), (100-54)+1*200, windowY - 200, null);
+		}
+		if(wallHP[2]<5){
+		g.drawImage(wall3.getImage(), (100-54)+2*200, windowY - 200, null);
+		}
+		if(wallHP[3]<5){
+		g.drawImage(wall4.getImage(), (100-54)+3*200, windowY - 200, null);
+		}
     }
     public void actionPerformed(ActionEvent e) {
         //AlienGame theClass=new AlienGame();
@@ -137,60 +126,14 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
             }
         }
 		// Skottet rör sig
-		for (int i = 0; i < maxBullets; i++) {
-			bullets[i].y = bullets[i].y - 3;
-			if (bullets[i].y < 0)
-				bullets[i].alive = false;
-		}
-
-		
-		// Aliens rör sig
-		if (moveAlienOrNot > 1000)
-			moveAlienOrNot = 0;
-		
-		for (int i = 0; i < maxAliens && moveAlienOrNot % 15 ==  0; i++) {
-			aliens[i].y = aliens[i].y + 1;
-		}
-		moveAlienOrNot += 1;
-		
-		if (spaceDown) {
-			if (shootOrNot == fireSpeed) { // Ändra hur fort den ska skjuta här
-				bullets[nextBullet].x = shipX + shipSizeX / 2 - bullets[nextBullet].sizeX;
-				bullets[nextBullet].y = windowY - 100;
-				bullets[nextBullet].alive = true;
-				if (nextBullet + 1 < maxBullets)
-					nextBullet++;
-				else
-					nextBullet = 0;
-				shootOrNot = 0;
+		for (int i = 0; i < 10; i++) {
+			if (bullets[i].y > 0) {
+				bullets[i].y = bullets[i].y - 3;
 			}
-			
 		}
-		if (shootOrNot < fireSpeed) { // och här
-			shootOrNot++;
-		}
-		for (int i = 0; i < maxBullets; i++)
-			for (int j = 0; j < maxAliens; j++) {
-				if (bullets[i].x + bullets[i].sizeX >= aliens[j].x &&
-									bullets[i].x <= aliens[j].x + aliens[j].sizeX &&
-									bullets[i].y + bullets[i].sizeY >= aliens[j].y &&
-									bullets[i].y <= aliens[j].y + aliens[j].sizeY &&
-									aliens[j].alive && bullets[i].alive) {
-					aliens[j].alive = false;
-					bullets[i].alive = false;
-					points += 10;
-					System.out.println("Points: " + points);
-				}
-			}
-		
-		if (spaceDown && upDown) {
-			fireSpeed = 1;
-			shipSpeed = 6;
-			superMode = true;
-		}
-		repaint();
+        repaint();
     }
-	
+
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -200,13 +143,16 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
             shipSpeedLeft = -shipSpeed;
         }
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			spaceDown = true;			
+			bullets[nextBullet].x = shipX;
+			bullets[nextBullet].y = windowY - 100;
+			if (nextBullet + 1 < 10)
+				nextBullet++;
+			else
+				nextBullet = 0;
+				
 			if (debugMode) {
-				System.out.println("[actn] Space hit");
-				}
-		}
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			upDown = true;
+				System.out.println("[info] Shots fired");
+			}
 		}
     }
 
@@ -218,13 +164,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             shipSpeedLeft = 0;
         }
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			spaceDown = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			upDown = false;
-		}
-	}
+    }
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -242,16 +182,6 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
 }
 
 class Bullet {
-    int x = 1000;
+    int x;
     int y;
-	int sizeX = 2;
-	int sizeY = 10;
-	boolean alive = true;
-}
-class Alien {
-	int x = 100;
-	int y;
-	int sizeX = 30;
-	int sizeY = 30;
-	boolean alive = true;
 }
