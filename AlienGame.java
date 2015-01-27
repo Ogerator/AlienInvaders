@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 
 public class AlienGame extends JComponent implements ActionListener, KeyListener {
 
+	boolean shipAlive = true;
 	int alienSak;
 	int maxAlienBullets = 20;
 	AlienBullet[] alienBullets = new AlienBullet[maxAlienBullets];
@@ -44,6 +45,8 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
  int alienFireSpeed = 100;
  boolean superMode = false;
  Image image;
+ boolean gameOver;
+ int gameOverCount;
 
 
 public AlienGame() { //initera gojs här typ
@@ -125,6 +128,11 @@ for (int i = 0; i < maxAlienBullets; i++) {
 		}
  }
  
+ if (gameOver)
+	g.setColor(new Color(100, 100, 100));
+	g.setFont(new Font("Arial", Font.BOLD,gameOverCount));
+	g.drawString("GAME OVER", windowX / 2 - 300, windowY / 2);
+ 
  //poängen
  g.setColor(new Color(100, 237, 106));
  g.setFont(new Font("Arial", Font.BOLD,34));
@@ -153,9 +161,11 @@ for (int i = 0; i < maxAlienBullets; i++) {
  }
  
  // Ritar rymdskepp
+	if (shipAlive) {
        g.setColor(new Color(255, 2, 57));
        g.fillRect(shipX, windowY - 100, shipSizeX, shipSizeY);
  g.fillRect(shipX + shipSizeX / 2 - 2, windowY - 108, 4, 8);
+	}
  
    }
    public void actionPerformed(ActionEvent e) {
@@ -275,7 +285,8 @@ for (int i = 0; i < maxAlienBullets; i++) {
 			alienBullets[i].y + alienBullets[i].sizeY >= windowY - 100 &&
 			alienBullets[i].y <= windowY - 100 + shipSizeY &&
 			alienBullets[i].alive){
-				System.out.println("Game Over");
+				gameOver = true;
+				shipAlive = false;
 			}
 		}
   
@@ -297,15 +308,28 @@ for (int i = 0; i < maxAlienBullets; i++) {
 	}
 
   }
- 
+  
+  if (gameOverCount > 100)
+	System.exit(0);
  
  if (upDown && spaceDown) {
-  superMode = true;
-  fireSpeed = 1;
-  shipSpeed = 6;
-  bulletSpeed = 3;
-  shootOrNot = 0;
+	if (superMode) {
+		fireSpeed = 25;
+		shipSpeed = 2;
+		bulletSpeed = 8;
+		shootOrNot = 0;
+	}
+	else {
+	  superMode = true;
+	  fireSpeed = 1;
+	  shipSpeed = 6;
+	  bulletSpeed = 3;
+	  shootOrNot = 0;
+  }
  }
+ 
+ if (gameOver)
+	gameOverCount++;
  
  repaint();
    }
