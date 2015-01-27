@@ -49,7 +49,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
  int gameOverCount;
 
 
-public AlienGame() { //initera gojs h√§r typ
+public AlienGame() { //initera gojs h‰r typ
  for (int i = 0; i < maxBullets; i++) {
   bullets[i] = new Bullet();
  }
@@ -65,7 +65,6 @@ for (int i = 0; i < maxAlienBullets; i++) {
   alienBullets[i] = new AlienBullet();
  }
 }
- 
 
    public static void main (String[] arg) {
        AlienGame theClass = new AlienGame();
@@ -79,7 +78,7 @@ for (int i = 0; i < maxAlienBullets; i++) {
                System.err.println("[ ex ] "+e);
            }
        }
-       JFrame window = new JFrame("Alien Invaders"); // <-- H√§r √§r titeln p√• f√∂nstret
+       JFrame window = new JFrame("Alien Invaders"); // <-- H‰r ‰r titeln pÂ fˆnstret
 		
        AlienGame game = new AlienGame();
        window.add(game);
@@ -129,11 +128,18 @@ for (int i = 0; i < maxAlienBullets; i++) {
  }
  
  if (gameOver)
+	if (gameOverCount < 99) {
 	g.setColor(new Color(100, 100, 100));
 	g.setFont(new Font("Arial", Font.BOLD,gameOverCount));
 	g.drawString("GAME OVER", windowX / 2 - 300, windowY / 2);
+	}
+	else {
+	g.setColor(new Color(100, 100, 100));
+	g.setFont(new Font("Arial", Font.BOLD,16));
+	g.drawString("Credits: Oskar Sˆderberg Natur/Natur och Lukas Tonneman Brommalallare", windowX / 2 - 300, windowY / 2);
+	}
  
- //po√§ngen
+ //po‰ngen
  g.setColor(new Color(100, 237, 106));
  g.setFont(new Font("Arial", Font.BOLD,34));
  g.drawString("Score: "+points, 5, windowY-10);
@@ -188,7 +194,7 @@ for (int i = 0; i < maxAlienBullets; i++) {
                System.exit(0);
            }
        }
- // Skottet r√∂r sig
+ // Skottet rˆr sig
  for (int i = 0; i < maxBullets; i++) {
   bullets[i].y = bullets[i].y - bulletSpeed;
   if (bullets[i].y < 0)
@@ -201,7 +207,7 @@ for (int i = 0; i < maxAlienBullets; i++) {
    alienBullets[i].alive = false;
  }
  
- // Aliens r√∂r sig
+ // Aliens rˆr sig
  if (moveAlienOrNot > 1000)
   moveAlienOrNot = 0;
  
@@ -210,7 +216,7 @@ for (int i = 0; i < maxAlienBullets; i++) {
  }
  moveAlienOrNot += 1;
  if (spaceDown) {
-  if (shootOrNot == fireSpeed) { // √Ñndra hur fort den ska skjuta h√§r
+  if (shootOrNot == fireSpeed) { // ƒndra hur fort den ska skjuta h‰r
    bullets[nextBullet].x = shipX + shipSizeX / 2 - bullets[nextBullet].sizeX;
    bullets[nextBullet].y = windowY - 100;
    bullets[nextBullet].alive = true;
@@ -224,7 +230,7 @@ for (int i = 0; i < maxAlienBullets; i++) {
  }
  
  if ((int)(Math.random()*20) == 1) {
-	if (alienShootOrNot == alienFireSpeed) { // √Ñndra hur fort den ska skjuta h√§r
+	if (alienShootOrNot == alienFireSpeed) { // ƒndra hur fort den ska skjuta h‰r
 		alienSak = (int)(Math.random()*maxAliens);
 		if (aliens[alienSak].alive) {
 			alienBullets[alienNextBullet].x = aliens[alienSak].x + aliens[alienSak].sizeX / 2 - alienBullets[alienNextBullet].sizeX;
@@ -239,11 +245,11 @@ for (int i = 0; i < maxAlienBullets; i++) {
 		}
   }
  
- if (shootOrNot < fireSpeed) { // och h√§r
+ if (shootOrNot < fireSpeed) { // och h‰r
   shootOrNot++;
  }
  
- if (alienShootOrNot < alienFireSpeed) { // och h√§r
+ if (alienShootOrNot < alienFireSpeed) { // och h‰r
   alienShootOrNot++;
  }
  for (int i = 0; i < maxBullets; i++)
@@ -278,7 +284,7 @@ for (int i = 0; i < maxAlienBullets; i++) {
 
   }
   
-  // Alienskott tr√§ffar skeppet
+  // Alienskott tr‰ffar skeppet
   for(int i=0;i<maxAlienBullets;i++){
 		if(alienBullets[i].x + alienBullets[i].sizeX >= shipX &&
 			alienBullets[i].x <= shipX + shipSizeX &&
@@ -309,29 +315,43 @@ for (int i = 0; i < maxAlienBullets; i++) {
 
   }
   
-  if (gameOverCount > 100)
+  /*if (allDead(aliens))
+	newWave();*/
+  
+  if (gameOverCount > 300)
 	System.exit(0);
  
  if (upDown && spaceDown) {
-	if (superMode) {
+	/*if (superMode) {
+		superMode = false;
 		fireSpeed = 25;
 		shipSpeed = 2;
 		bulletSpeed = 8;
 		shootOrNot = 0;
 	}
-	else {
+	else {*/
 	  superMode = true;
 	  fireSpeed = 1;
 	  shipSpeed = 6;
 	  bulletSpeed = 3;
 	  shootOrNot = 0;
   }
- }
+ //}
  
  if (gameOver)
 	gameOverCount++;
  
  repaint();
+   }
+   
+
+   
+   public boolean allDead(Alien[] lista) {
+	boolean shit = true;
+	for (int i = 0; i < aliens.length; i++)
+		if (aliens[i].alive)
+			shit = false;
+	return shit;
    }
 
    @Override
