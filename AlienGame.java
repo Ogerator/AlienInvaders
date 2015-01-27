@@ -11,30 +11,34 @@ import java.awt.event.KeyListener;
 
 public class AlienGame extends JComponent implements ActionListener, KeyListener {
 
-int maxAliens = 8;
-Alien[] aliens = new Alien[maxAliens];
-int maxBullets = 200;
-   Bullet[] bullets = new Bullet[maxBullets];
-	Wall[] walls=new Wall[4];
-   int windowX = 800;
-   public int windowY = 600;
-   int shipSizeX = 30;
-   int shipSizeY = 10;
-public int shipX = windowX / 2 - shipSizeX / 2;
-   int shipSpeedRight = 0;
-   int shipSpeedLeft = 0;
-   int shipSpeed = 2; //2 pixlar per 10 ms
-   boolean debugMode = true;
-int nextBullet;
-int bulletSpeed = 3;
-int shootOrNot;
-int moveAlienOrNot;
-boolean spaceDown;
-boolean upDown;
-int points;
-int fireSpeed = 25;
-boolean superMode = false;
-Image image;
+	int maxWalls = 4;
+	Wall[] walls = new Wall[maxWalls];
+ int maxAliens = 8;
+ Alien[] aliens = new Alien[maxAliens];
+ int maxBullets = 200;
+    Bullet[] bullets = new Bullet[maxBullets];
+    // Bullet theBullet = new Bullet();
+    int windowX = 800;
+    public int windowY = 600;
+    int shipSizeX = 30;
+    int shipSizeY = 10;
+ public int shipX = windowX / 2 - shipSizeX / 2;
+    int shipSpeedRight = 0;
+    int shipSpeedLeft = 0;
+    int shipSpeed = 2; //2 pixlar per 10 ms
+    boolean debugMode = false;
+ int nextBullet;
+ int bulletSpeed = 3;
+ int shootOrNot;
+ int moveAlienOrNot;
+ boolean spaceDown;
+ boolean upDown;
+ int points;
+ int fireSpeed = 25;
+ boolean superMode = false;
+ int[] wallHP=new int[]{1,1,1,1};
+ Image image;
+
 
 public AlienGame() { //initera gojs här typ
  for (int i = 0; i < maxBullets; i++) {
@@ -44,7 +48,7 @@ public AlienGame() { //initera gojs här typ
   aliens[i] = new Alien();
   aliens[i].x = i * 100;
  }
- for(int i=0;i<4;i++){
+ for(int i=0;i<maxWalls;i++){
 	 	walls[i]=new Wall();
 	 	walls[i].x=(100-walls[0].sizeX/2)+i*200;
  		}	
@@ -272,12 +276,21 @@ public AlienGame() { //initera gojs här typ
 
 }
 
+class AlienBullet {
+	int x;
+	int y;
+	int sizeX;
+	int sizeY;
+	boolean alive = true;
+}
+
 class Wall{
 int y=400;
 int HP=4;
 int sizeX=108;
 int x;
 }
+
 class Bullet {
    int x = 1000;
    int y;
