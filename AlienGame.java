@@ -41,7 +41,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
  boolean upDown;
  int points;
  int fireSpeed = 25;
- int alienFireSpeed = 25;
+ int alienFireSpeed = 100;
  boolean superMode = false;
  Image image;
 
@@ -267,6 +267,37 @@ for (int i = 0; i < maxAlienBullets; i++) {
 	}
 
   }
+  
+  // Alienskott träffar skeppet
+  for(int i=0;i<maxAlienBullets;i++){
+		if(alienBullets[i].x + alienBullets[i].sizeX >= shipX &&
+			alienBullets[i].x <= shipX + shipSizeX &&
+			alienBullets[i].y + alienBullets[i].sizeY >= windowY - 100 &&
+			alienBullets[i].y <= windowY - 100 + shipSizeY &&
+			alienBullets[i].alive){
+				System.out.println("Game Over");
+			}
+		}
+  
+  // Aliens hit walls
+  for(int i=0;i<maxAlienBullets;i++){
+	for (int j = 0; j < maxWalls; j++) {
+		if(alienBullets[i].x + alienBullets[i].sizeX >= walls[j].x &&
+			alienBullets[i].x <= walls[j].x + walls[j].sizeX &&
+			alienBullets[i].y + alienBullets[i].sizeY >= walls[j].y &&
+			alienBullets[i].y <= walls[j].y + walls[j].sizeY &&
+			walls[j].HP > 0 && alienBullets[i].alive){
+				alienBullets[i].alive=false;
+				walls[j].HP--;
+				System.out.println(walls[j].HP);
+				if(debugMode){
+					System.out.println("[info] Wall "+i+" hit");
+			}
+		}
+	}
+
+  }
+ 
  
  if (upDown && spaceDown) {
   superMode = true;
