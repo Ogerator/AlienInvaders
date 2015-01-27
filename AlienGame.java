@@ -11,6 +11,10 @@ import java.awt.event.KeyListener;
 
 public class AlienGame extends JComponent implements ActionListener, KeyListener {
 
+	int alienSak;
+	int maxAlienBullets = 20;
+	AlienBullet[] alienBullets = new AlienBullet[maxAlienBullets];
+	int alienBulletSpeed = 8;
 	int maxWalls = 4;
 	Wall[] walls = new Wall[maxWalls];
  int maxAliens = 8;
@@ -28,13 +32,16 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     int shipSpeed = 2; //2 pixlar per 10 ms
     boolean debugMode = false;
  int nextBullet;
+ int alienNextBullet;
  int bulletSpeed = 3;
  int shootOrNot;
+ int alienShootOrNot;
  int moveAlienOrNot;
  boolean spaceDown;
  boolean upDown;
  int points;
  int fireSpeed = 25;
+ int alienFireSpeed = 25;
  boolean superMode = false;
  Image image;
 
@@ -51,7 +58,11 @@ public AlienGame() { //initera gojs här typ
 	 	walls[i]=new Wall();
 	 	walls[i].x=(100-walls[0].sizeX/2)+i*200;
  		}	
+for (int i = 0; i < maxAlienBullets; i++) {
+  alienBullets[i] = new AlienBullet();
+ }
 }
+ 
 
    public static void main (String[] arg) {
        AlienGame theClass = new AlienGame();
@@ -126,6 +137,14 @@ public AlienGame() { //initera gojs här typ
    g.fillRect(bullets[i].x, bullets[i].y, bullets[i].sizeX, bullets[i].sizeY);
  }
  
+ // alienBullets
+ g.setColor(new Color(255, 255, 255));
+ for (int i = 0; i < maxAlienBullets;  i++) {
+	//System.out.println(i);
+  if (alienBullets[i].alive)
+   g.fillRect(alienBullets[i].x, alienBullets[i].y, alienBullets[i].sizeX, alienBullets[i].sizeY);
+ }
+ 
  // Aliens
  g.setColor(new Color(55, 111, 60));
  for (int i = 0; i < maxAliens; i++) {
@@ -166,6 +185,11 @@ public AlienGame() { //initera gojs här typ
    bullets[i].alive = false;
  }
 
+ for (int i = 0; i < maxAlienBullets; i++) {
+  alienBullets[i].y = alienBullets[i].y + alienBulletSpeed;
+  if (alienBullets[i].y < 0)
+   alienBullets[i].alive = false;
+ }
  
  // Aliens rör sig
  if (moveAlienOrNot > 1000)
@@ -188,8 +212,29 @@ public AlienGame() { //initera gojs här typ
   }
   
  }
+ 
+ if ((int)(Math.random()*20) == 1) {
+	if (alienShootOrNot == alienFireSpeed) { // Ändra hur fort den ska skjuta här
+		alienSak = (int)(Math.random()*maxAliens);
+		if (aliens[alienSak].alive) {
+			alienBullets[alienNextBullet].x = aliens[alienSak].x + aliens[alienSak].sizeX / 2 - alienBullets[alienNextBullet].sizeX;
+			alienBullets[alienNextBullet].y = aliens[alienNextBullet].y;
+			alienBullets[alienNextBullet].alive = true;
+			   if (alienNextBullet + 1 < maxAliens)
+				alienNextBullet++;
+			   else
+				alienNextBullet = 0;
+			alienShootOrNot = 0;
+			}
+		}
+  }
+ 
  if (shootOrNot < fireSpeed) { // och här
   shootOrNot++;
+ }
+ 
+ if (alienShootOrNot < alienFireSpeed) { // och här
+  alienShootOrNot++;
  }
  for (int i = 0; i < maxBullets; i++)
   for (int j = 0; j < maxAliens; j++) {
@@ -285,10 +330,10 @@ public AlienGame() { //initera gojs här typ
 }
 
 class AlienBullet {
-	int x;
+	int x = 900;
 	int y;
-	int sizeX;
-	int sizeY;
+	int sizeX = 2;
+	int sizeY = 10;
 	boolean alive = true;
 }
 
