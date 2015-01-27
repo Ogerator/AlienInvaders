@@ -105,6 +105,7 @@ public AlienGame() { //initera gojs här typ
   g.fillRect(shipX + shipSizeX / 2 - 1, 0, 1, 500);
  }
  //drawing walls
+
  
  for(int i=0;i<maxWalls;i++){
  ImageIcon wall=new ImageIcon("recource\\wall"+walls[i].HP+".png");
@@ -112,6 +113,11 @@ public AlienGame() { //initera gojs här typ
 		g.drawImage(wall.getImage(), walls[i].x, walls[i].y, null);
 		}
  }
+ 
+ //poängen
+ g.setColor(new Color(100, 237, 106));
+ g.setFont(new Font("Arial", Font.BOLD,34));
+ g.drawString("Score: "+points, 5, windowY-10);
  
  // Skott
  g.setColor(new Color(255, 255, 255));
@@ -169,7 +175,6 @@ public AlienGame() { //initera gojs här typ
   aliens[i].y = aliens[i].y + 1;
  }
  moveAlienOrNot += 1;
- 
  if (spaceDown) {
   if (shootOrNot == fireSpeed) { // Ändra hur fort den ska skjuta här
    bullets[nextBullet].x = shipX + shipSizeX / 2 - bullets[nextBullet].sizeX;
@@ -215,6 +220,7 @@ public AlienGame() { //initera gojs här typ
 			}
 		}
 	}
+
   }
  
  if (upDown && spaceDown) {
@@ -224,8 +230,6 @@ public AlienGame() { //initera gojs här typ
   bulletSpeed = 3;
   shootOrNot = 0;
  }
- //for (int i = 0; i < maxAliens; i++)
-  //System.out.println(bullets[i].alive);
  
  repaint();
    }
