@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 
 public class AlienGame extends JComponent implements ActionListener, KeyListener {
 
+	int 
  int maxAliens = 8;
  Alien[] aliens = new Alien[maxAliens];
  int maxBullets = 200;
@@ -265,7 +266,13 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
     }
 
 }
-
+class AlienBullet {
+	int x;
+	int y;
+	int sizeX;
+	int sizeY;
+	boolean alive = true;
+}
 class Bullet {
     int x = 1000;
     int y;
