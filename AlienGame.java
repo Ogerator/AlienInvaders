@@ -113,8 +113,9 @@ public AlienGame() { //initera gojs här typ
  }
  
  //poängen
+ g.setColor(new Color(100, 237, 106));
  g.setFont(new Font("Arial", Font.BOLD,34));
- g.drawString("Poäng: "+points, 10, 10);
+ g.drawString("Score: "+points, 5, windowY-10);
  
  // Skott
  g.setColor(new Color(255, 255, 255));
