@@ -36,7 +36,6 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
  int points;
  int fireSpeed = 25;
  boolean superMode = false;
- int[] wallHP=new int[]{1,1,1,1};
  Image image;
 
 
@@ -48,11 +47,12 @@ public AlienGame() { //initera gojs här typ
   aliens[i] = new Alien();
   aliens[i].x = i * 100;
  }
- for(int i=0;i<maxWalls;i++){
+ for(int i=0;i<walls.length;i++){
 	 	walls[i]=new Wall();
 	 	walls[i].x=(100-walls[0].sizeX/2)+i*200;
  		}	
 }
+
    public static void main (String[] arg) {
        AlienGame theClass = new AlienGame();
        try{
@@ -106,7 +106,7 @@ public AlienGame() { //initera gojs här typ
  }
  //drawing walls
  
- for(int i=0;i<4;i++){
+ for(int i=0;i<maxWalls;i++){
  ImageIcon wall=new ImageIcon("recource\\wall"+walls[i].HP+".png");
  if(walls[i].HP>0){
 		g.drawImage(wall.getImage(), walls[i].x, walls[i].y, null);
@@ -197,17 +197,24 @@ public AlienGame() { //initera gojs här typ
     bullets[i].alive = false;
     points += 10;
     System.out.println("Points: " + points);
-   }
+  }
   }
   
   for(int i=0;i<maxBullets;i++){
-	   if(bullets[i].x<(100-54)+i*200&&bullets[i].x>(100-54)+i*200+108&&bullets[i].y>windowY-200){
-	   bullets[i].alive=false;
-	   walls[i].HP--;
-		   if(debugMode){
-		   System.out.println("[info] Wall "+i+" hit");
-		   }
-	   }
+	for (int j = 0; j < maxWalls; j++) {
+		if(bullets[i].x + bullets[i].sizeX >= walls[j].x &&
+			bullets[i].x <= walls[j].x + walls[j].sizeX &&
+			bullets[i].y + bullets[i].sizeY >= walls[j].y &&
+			bullets[i].y <= walls[j].y + walls[j].sizeY &&
+			walls[j].HP > 0 && bullets[i].alive){
+				bullets[i].alive=false;
+				walls[j].HP--;
+				System.out.println(walls[j].HP);
+				if(debugMode){
+					System.out.println("[info] Wall "+i+" hit");
+			}
+		}
+	}
   }
  
  if (upDown && spaceDown) {
@@ -285,6 +292,7 @@ class Wall{
 int y=400;
 int HP=4;
 int sizeX=108;
+int sizeY = 44;
 int x;
 }
 
