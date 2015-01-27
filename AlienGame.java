@@ -42,7 +42,7 @@ public class AlienGame extends JComponent implements ActionListener, KeyListener
  boolean upDown;
  int points;
  int fireSpeed = 25;
- int alienFireSpeed = 100;
+ int alienFireSpeed = 50;
  boolean superMode = false;
  Image image;
  boolean gameOver;
@@ -127,16 +127,30 @@ for (int i = 0; i < maxAlienBullets; i++) {
 		}
  }
  
- if (gameOver)
-	if (gameOverCount < 99) {
+ if (gameOver && allDead(aliens) == false)
+	if (gameOverCount < 200) {
 	g.setColor(new Color(100, 100, 100));
-	g.setFont(new Font("Arial", Font.BOLD,gameOverCount));
+	g.setFont(new Font("Arial", Font.BOLD,gameOverCount/2));
 	g.drawString("GAME OVER", windowX / 2 - 300, windowY / 2);
 	}
 	else {
 	g.setColor(new Color(100, 100, 100));
 	g.setFont(new Font("Arial", Font.BOLD,16));
 	g.drawString("Credits: Oskar Söderberg Natur/Natur och Lukas Tonneman Brommalallare", windowX / 2 - 300, windowY / 2);
+	}
+
+	if (allDead(aliens)) {
+		gameOver = true;
+		if (gameOverCount < 99) {
+	g.setColor(new Color(100, 100, 100));
+	g.setFont(new Font("Arial", Font.BOLD,gameOverCount));
+	g.drawString("ATTEND BLACKAN", windowX / 2 - 300, windowY / 2);
+	}
+	else {
+		g.setColor(new Color(100, 100, 100));
+	g.setFont(new Font("Arial", Font.BOLD,16));
+	g.drawString("Credits: Oskar Söderberg Natur/Natur och Lukas Tonneman Brommalallare", windowX / 2 - 300, windowY / 2);
+	}
 	}
  
  //poängen
@@ -315,10 +329,14 @@ for (int i = 0; i < maxAlienBullets; i++) {
 
   }
   
+  for (int i = 0; i < aliens.length; i++)
+	if (aliens[i].y > 700)
+		aliens[i].alive = false;
+  
   /*if (allDead(aliens))
 	newWave();*/
   
-  if (gameOverCount > 300)
+  if (gameOverCount > 600)
 	System.exit(0);
  
  if (upDown && spaceDown) {
@@ -343,8 +361,6 @@ for (int i = 0; i < maxAlienBullets; i++) {
  
  repaint();
    }
-   
-
    
    public boolean allDead(Alien[] lista) {
 	boolean shit = true;
